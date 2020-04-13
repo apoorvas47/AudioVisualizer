@@ -22,6 +22,9 @@ class AudioVisualizer(object):
         self.app = QtGui.QApplication(sys.argv)
 
         self.window = opengl.GLViewWidget()
+        
+        # new empty audio data file
+        open('audioData.csv', 'w').close()
 
         # *** REPLACE wavefile.wav WITH THE WAV FILE NAME IN THIS FOLDER ***
         # For best results, use audio files with the standard sample rate
@@ -142,6 +145,13 @@ class AudioVisualizer(object):
                 self.window.grabFrameBuffer().save('audioVisualization.png')
 
             wf_sample = wf_sample * 0.03 # Factor here affects height seen
+            
+            # Write amplitudes and avg frequency to audio data csv file
+            with open('audioData.csv', "a") as csv_file:
+                csv_file.write(', '.join([str(ampl) for ampl in wf_sample]))
+                csv_file.write(', ' + str(avg_freq))
+                csv_file.write('\n')
+            
             wf_sample = wf_sample.reshape((3, 3))
         else:
             wf_sample = np.array([0] * 9)
