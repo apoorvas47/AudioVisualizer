@@ -22,14 +22,11 @@ class AudioVisualizer(object):
         self.app = QtGui.QApplication(sys.argv)
 
         self.window = opengl.GLViewWidget()
-        
-        # new empty audio data file
-        open('audioData.csv', 'w').close()
 
         # *** REPLACE wavefile.wav WITH THE WAV FILE NAME IN THIS FOLDER ***
         # For best results, use audio files with the standard sample rate
         #   of 44100Hz (Can verify this via self.wf.getframerate())
-        self.waveform = wave.open("wavefile.wav", 'rb')
+        self.waveform = wave.open("shortSample.wav", 'rb')
 
         total_frames = self.waveform.getnframes()
         self.frame_rate = self.waveform.getframerate()
@@ -37,7 +34,16 @@ class AudioVisualizer(object):
         # 8.74 just a num I found that works well
 
         # This is the width used for the squares made for each sample wf taken.
+        # This number is 3 by default but can be altered as desired to a
+        #   reasonable value greater than 1. (Recommended maximum of 10)
         self.square_width = 3
+
+        # Initialize audio data file with header row of corresponding labels
+        with open('audioData.csv', "w") as csv_file:
+            amplitudes_per_sample = self.square_width**2
+            labels = ['amplitude %s'%i for i in range(1, amplitudes_per_sample +1)]
+            labels.append('frequency\n')
+            csv_file.write(', '.join(labels))
 
         self.total_squares = math.ceil(total_frames / self.frames_per_sample)
         self.grid_width = math.ceil(math.sqrt(self.total_squares)) + \
@@ -143,19 +149,20 @@ class AudioVisualizer(object):
             if len(wf_sample) < self.square_width**2:
                 self.timer.stop()
                 self.window.grabFrameBuffer().save('audioVisualization.png')
+                return
 
             wf_sample = wf_sample * 0.03 # Factor here affects height seen
-            
+
             # Write amplitudes and avg frequency to audio data csv file
             with open('audioData.csv', "a") as csv_file:
                 csv_file.write(', '.join([str(ampl) for ampl in wf_sample]))
                 csv_file.write(', ' + str(avg_freq))
                 csv_file.write('\n')
-            
-            wf_sample = wf_sample.reshape((3, 3))
+
+            wf_sample = wf_sample.reshape((self.square_width, self.square_width))
         else:
-            wf_sample = np.array([0] * 9)
-            wf_sample = wf_sample.reshape((3, 3))
+            wf_sample = np.array([0] * self.square_width * self.square_width)
+            wf_sample = wf_sample.reshape((self.square_width, self.square_width))
             square_color = [0, 0, 0, 0]
             # note: each color is [R,G,B,Translucency]
 
@@ -197,9 +204,9 @@ class AudioVisualizer(object):
             xcoord, ycoord, direc = next(self.current_coord)
             self.squares_so_far += 1
 
-            for yid in range(3):
+            for yid in range(self.square_width):
                 yoff = yid + ycoord
-                for xid in range(3):
+                for xid in range(self.square_width):
                     xoff = xid + xcoord
 
                     xpush = 0
@@ -212,11 +219,13 @@ class AudioVisualizer(object):
                     vert_coord = int((yoff+ypush) * self.grid_width + (xoff + xpush))
                     if vert_coord >= self.grid_width**2:
                         break
-                    self.verts[vert_coord][2] = wf_sample[(yid * 3) % 3][xid]
-                    # e.g. (4,6) --> (4 - 5) * 2 + 6 * 12 * 2
+
+                    # update the height or z-axis value of coordinate
+                    self.verts[vert_coord][2] = wf_sample[yid % 3][xid]
 
                     color_coord = ((xoff) - (yoff))*2 + (
                             yoff * self.grid_width * 2)
+                    # e.g. (4,6) --> (4 - 5) * 2 + 6 * 12 * 2
 
                     # Update the color of both triangle faces of the square:
 
@@ -250,7 +259,7 @@ class AudioVisualizer(object):
 
         exponentialGrowthFactor = .75
 
-        self.cam_azimuth -= 90 / (self.totalOrbitsCount * 2 + 3)
+        self.cam_azimuth -= 90 / (self.totalOrbitsCount * 2 + self.square_width)
 
         self.cam_distance += .25 - .23 * (
                     1 - exponentialGrowthFactor ** self.totalOrbitsCount)
