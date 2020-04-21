@@ -1,4 +1,4 @@
-# AudioVisualizer
+# Audio Visualizer
 
 <!--- Sample gif and/or image here --->
 
