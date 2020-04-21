@@ -101,8 +101,7 @@ class AudioVisualizer(object):
 
     def update_mesh_args(self, wf_sample=None, initialized=True):
         """
-        Update mesh verts, faces, and colors based on data from the waveform sample.
-        TODO: Update description if necessary
+        Update mesh verts, faces, and/or colors based on data from the waveform sample.
         """
 
         # Calculate data
@@ -113,7 +112,7 @@ class AudioVisualizer(object):
 
             wf_sample = struct.unpack(str(wf_len) + 'B', wf_sample)
 
-            if wf_len == 0: # TODO: see if this additional check can be refact
+            if wf_len == 0:
                 self.timer.stop()
                 self.window.grabFrameBuffer().save('audioVisualization.png')
                 return
@@ -132,7 +131,7 @@ class AudioVisualizer(object):
                 rfft_sum += rfft_data[i] * freqAtIndex
                 sum_of_arr += rfft_data[i]
             avg_freq = 0 if sum_of_arr == 0 else rfft_sum / sum_of_arr
-            square_color = self.color_from_freq(avg_freq)
+            square_color = color_from_freq(avg_freq, self.frame_rate)
 
             # Retreive square width ^ 2 points of amplitude to use.
 
@@ -275,31 +274,6 @@ class AudioVisualizer(object):
         if abs(self.cam_azimuth / 360) > self.totalOrbitsCount:
             self.totalOrbitsCount += 1
 
-    def color_from_freq(self, freq):
-        """
-        Returns an RGB color value array to use from a frequency.
-        """
-
-        max_freq = self.frame_rate / 2
-
-        # After sampling many songs, this were the constants that captured
-        # the range of most
-        range_lower_bound = max_freq / 2.15
-        range_upper_bound = max_freq / 1.95
-        range = range_upper_bound - range_lower_bound
-
-        rescaled_freq = freq - range_lower_bound
-        if rescaled_freq < 0:
-            rescaled_freq = 0
-        elif rescaled_freq > range:
-            rescaled_freq = 1
-
-        # Converts the frequency to a value between 0 and 1.
-        # A lower frequency will produce a bluer value and a higher one will
-        #   produce a redder value.
-        freq_val = rescaled_freq / range
-        return [freq_val, .3, 1 - freq_val, 1]
-
     def start(self):
         """
         Begins the timer and sets up the graphics window.
@@ -370,6 +344,30 @@ def next_coil_coordinate(x, y, total_squares):
 
         yield (current_x, current_y, direction)
 
+def color_from_freq(freq, frame_rate):
+    """
+    Returns an RGB color value array to use from a frequency.
+    """
+
+    max_freq = frame_rate / 2
+
+    # After sampling many songs, this were the constants that captured
+    # the range of most
+    range_lower_bound = max_freq / 2.15
+    range_upper_bound = max_freq / 1.95
+    range = range_upper_bound - range_lower_bound
+
+    rescaled_freq = freq - range_lower_bound
+    if rescaled_freq < 0:
+        rescaled_freq = 0
+    elif rescaled_freq > range:
+        rescaled_freq = 1
+
+    # Converts the frequency to a value between 0 and 1.
+    # A lower frequency will produce a bluer value and a higher one will
+    #   produce a redder value.
+    freq_val = rescaled_freq / range
+    return [freq_val, .3, 1 - freq_val, 1]
 
 if __name__ == '__main__':
     visualizer = AudioVisualizer()
