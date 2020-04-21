@@ -34,9 +34,9 @@ class AudioVisualizer(object):
         # 8.74 just a num I found that works well
 
         # This is the width used for the squares made for each sample wf taken.
-        # This number is 3 by default but can be altered as desired to a
+        # This number is 2 by default but can be altered as desired to a
         #   reasonable value greater than 1. (Recommended maximum of 10)
-        self.square_width = 3
+        self.square_width = 2
 
         # Initialize audio data file with header row of corresponding labels
         with open('audioData.csv', "w") as csv_file:
@@ -259,7 +259,7 @@ class AudioVisualizer(object):
 
         exponentialGrowthFactor = .75
 
-        self.cam_azimuth -= 90 / (self.totalOrbitsCount * 2 + self.square_width)
+        self.cam_azimuth -= 90 / (self.totalOrbitsCount * 2 + 3)
 
         self.cam_distance += .25 - .23 * (
                     1 - exponentialGrowthFactor ** self.totalOrbitsCount)
