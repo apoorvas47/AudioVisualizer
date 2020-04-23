@@ -17,11 +17,9 @@ PyQtGraph's PyPI version is not kept up to date. Therefore, to avoid possible re
 
 ## Usage
 
-Upload the wav file you would like to visualize into the same directory as the python script.
+Upload the .wav file you would like to visualize into the same directory as the python script.
 
-Change the wav file in the code to be the name of this file. 
-
-<!--- Perhaps change this to be an executable arg? Or a way to just detect the name of the wav file in the folded and use that too? --->
+If there are multiple .wav files in the directory, specify which to use as the second argument when running the python script. 
 
 Run the python script:
-`python audioMeshCoilVisualizer.py`
+`python audioMeshCoilVisualizer.py <wav file name>`
