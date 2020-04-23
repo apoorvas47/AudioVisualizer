@@ -11,9 +11,10 @@ from pyaudio import PyAudio
 import sys
 import wave
 import math
+import glob
 
 class AudioVisualizer(object):
-    def __init__(self):
+    def __init__(self, wave_file):
         """
         Add the empty mesh surface to the graphics view widget window.
         """
@@ -26,7 +27,7 @@ class AudioVisualizer(object):
         # *** REPLACE wavefile.wav WITH THE WAV FILE NAME IN THIS FOLDER ***
         # For best results, use audio files with the standard sample rate
         #   of 44100Hz (Can verify this via self.wf.getframerate())
-        self.waveform = wave.open("shortSample.wav", 'rb')
+        self.waveform = wave.open(wave_file, 'rb')
 
         total_frames = self.waveform.getnframes()
         self.frame_rate = self.waveform.getframerate()
@@ -370,5 +371,20 @@ def color_from_freq(freq, frame_rate):
     return [freq_val, .3, 1 - freq_val, 1]
 
 if __name__ == '__main__':
-    visualizer = AudioVisualizer()
+    # Make sure you have .wav file to read from
+    wav_files = glob.glob('*.wav')
+    wav_files_len = len(wav_files)
+    if wav_files_len == 0:
+        raise Exception('Must add a .wav file to this directory to visualize')
+    elif wav_files_len == 1:
+        wav_file = wav_files[0]
+    else:
+        # When multiple .wav files exist in directory, must specify when
+        # calling script which one to use.
+        if len(sys.argv) < 2:
+            raise Exception('Must specify as argument which .wav file to use')
+        wav_file = sys.argv[1]
+
+    # Run visualization
+    visualizer = AudioVisualizer(wav_file)
     visualizer.start()
