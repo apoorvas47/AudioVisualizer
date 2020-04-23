@@ -23,10 +23,8 @@ class AudioVisualizer(object):
         self.app = QtGui.QApplication(sys.argv)
 
         self.window = opengl.GLViewWidget()
-
-        # *** REPLACE wavefile.wav WITH THE WAV FILE NAME IN THIS FOLDER ***
-        # For best results, use audio files with the standard sample rate
-        #   of 44100Hz (Can verify this via self.wf.getframerate())
+        
+        # Note: Check sample rate of audio via self.wf.getframerate())
         self.waveform = wave.open(wave_file, 'rb')
 
         total_frames = self.waveform.getnframes()
