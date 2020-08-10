@@ -26,7 +26,8 @@ Run the python script:
 
 ## Sample Output
 
-See dynamic visualization progression and static visualization of Three Little Birds by Bob Marley below:
+See dynamic visualization progression and final static visualization image of Three Little Birds by Bob Marley below:
 
-<img src="threeLittleBirdsAudioVisualization.gif" width="50%"/>
-<img src="threeLittleBirdsAudioVisualization.png" width="50%"/>
+<img src="threeLittleBirdsDynamicVisualization1.gif" width="50%"/>
+<img src="threeLittleBirdsDynamicVisualization2.gif" width="50%"/>
+<img src="threeLittleBirdsStaticVisualization.png" width="50%"/>
