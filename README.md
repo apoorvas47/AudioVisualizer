@@ -1,7 +1,5 @@
 # AudioSquare
 
-<!--- Sample gif and/or image here --->
-
 Given an audio .wav file input (with a 44.1 kHz sampling rate for best results), this project will generate the dynamic visualization shown above as the audio plays. Once complete, the static visualization may be interacted with in the window according to the PyQtGraph's specified [3D Graphics mouse interactions](http://www.pyqtgraph.org/documentation/mouse_interaction.html#id1). The final static visualization will be captured and output as an image titled audioVisualization.png. In addition, the amplitude and frequency information gathered per sample read will be output to audioData.csv.
 
 ## Getting Started
