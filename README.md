@@ -23,3 +23,7 @@ If there are multiple .wav files in the directory, specify which to use as the s
 
 Run the python script:
 `python audioMeshCoilVisualizer.py <wav file name>`
+
+## Sample Output
+
+<img src="threeLittleBirdsAudioVisualization.gif" style="max-width:100%"/>
