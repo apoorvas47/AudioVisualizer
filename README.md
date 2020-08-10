@@ -26,4 +26,7 @@ Run the python script:
 
 ## Sample Output
 
-<img src="threeLittleBirdsAudioVisualization.gif" style="max-width:100%"/>
+See dynamic visualization progression and static visualization of Three Little Birds by Bob Marley below:
+
+<img src="threeLittleBirdsAudioVisualization.gif" width="50%"/>
+<img src="threeLittleBirdsAudioVisualization.png" width="50%"/>
